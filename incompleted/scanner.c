@@ -104,25 +104,27 @@ Token* readNumber(void) {
 
 Token* readConstChar(void) {
   // TODO
-  int tmp,num;
+  int num;
   num = 1;
   Token* token = makeToken(TK_CHAR,lineNo,colNo);
-  tmp = readChar();
-  if(tmp == EOF){
-    return error(ERR_INVALIDCHARCONSTANT,token->lineNo,token->colNo);
+  readChar();
+  if(currentChar == EOF){
+    error(ERR_INVALIDCHARCONSTANT,token->lineNo,token->colNo);
   }else{
-    token->string[0] = tmp;
+    token->string[0] = currentChar;
     while(1){
-      tmp = readChar();
-      if(charCodes[tmp] == CHAR_SINGLEQUOTE){
+      readChar();
+      if(charCodes[currentChar] == CHAR_SINGLEQUOTE){
         token->string[num] == '\0';
         return token;
-      }else if(tmp == EOF){
-        return error(ERR_INVALIDCHARCONSTANT,token->lineNo,token->colNo);
+      }else if(currentChar == EOF){
+        error(ERR_INVALIDCHARCONSTANT,token->lineNo,token->colNo);
       }
       num++;
     }
   }
+
+  return token;
 
 }
 
