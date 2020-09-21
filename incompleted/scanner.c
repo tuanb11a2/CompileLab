@@ -22,28 +22,108 @@ extern CharCode charCodes[];
 /***************************************************************/
 
 void skipBlank() {
-  int tmp;
-  tmp = readChar();
-  while(charCodes[tmp] == CHAR_SPACE){
-    tmp = readChar();
+  //TODO
+  while(charCodes[currentChar] == CHAR_SPACE && currentChar != EOF){
+    readChar();
   }
 }
 
 void skipComment() {
+  //TODO
   int tmp;
-  tmp = readChar();
+  while(1){
+    tmp = readChar();
+    if(charCodes[tmp] == CHAR_TIMES){
+      tmp = readChar();
+      if(charCodes[tmp] == CHAR_RPAR){
+        readChar();
+        break;
+      }else if (tmp == EOF)
+      {
+        return error(ERR_ENDOFCOMMENT,lineNo,colNo);
+      }
+    }else if(tmp == EOF){
+      return error(ERR_ENDOFCOMMENT,lineNo,colNo);
+    }
+  }
 }
 
 Token* readIdentKeyword(void) {
   // TODO
+  Token* token = makeToken(TK_IDENT,lineNo,colNo);
+  int count = 0;
+  while(charCodes[currentChar] == CHAR_DIGIT || charCodes[currentChar] == CHAR_LETTER){
+    token->string[count] = currentChar;
+    readChar();
+    count++;
+  }
+
+  token->string[count] = '\0';
+
+  //Error or not
+  if(count > MAX_IDENT_LEN){
+    error(ERR_IDENTTOOLONG,token->lineNo,token->colNo);
+  }else{
+    TokenType type = checkKeyword(token->string);
+    if(type != TK_NONE){
+      token->tokenType = type;
+    }
+  }
+
+  return token;
+
 }
 
 Token* readNumber(void) {
   // TODO
+  Token* token = makeToken(TK_NUMBER,lineNo,colNo);
+  int count = 0;
+  while (charCodes[currentChar] == CHAR_DIGIT) {
+	  if (count > MAX_IDENT_LEN) {
+		  error(ERR_IDENTTOOLONG, token->lineNo, token->colNo);
+	  }
+    // Add current character to the number
+    token->string[count] = currentChar;
+
+    // Increase string index
+    count++;
+
+    // Read next character
+    readChar();
+  }
+
+  // End string
+  token->string[count] = '\0';
+
+  // Convert current number to string
+  token->value = atoi(token->string);
+
+  return token;
 }
+
 
 Token* readConstChar(void) {
   // TODO
+  int tmp,num;
+  num = 1;
+  Token* token = makeToken(TK_CHAR,lineNo,colNo);
+  tmp = readChar();
+  if(tmp == EOF){
+    return error(ERR_INVALIDCHARCONSTANT,token->lineNo,token->colNo);
+  }else{
+    token->string[0] = tmp;
+    while(1){
+      tmp = readChar();
+      if(charCodes[tmp] == CHAR_SINGLEQUOTE){
+        token->string[num] == '\0';
+        return token;
+      }else if(tmp == EOF){
+        return error(ERR_INVALIDCHARCONSTANT,token->lineNo,token->colNo);
+      }
+      num++;
+    }
+  }
+
 }
 
 Token* getToken(void) {
@@ -172,12 +252,16 @@ Token* getToken(void) {
       colNo = colNo - 1;
 		  token = makeToken(SB_LSEL, lineNo, colNo);
 		  readChar();
+      colNo = colNo + 1;
 		  return token;
     }else if(charCodes[tmp] == CHAR_TIMES){
+      skipComment();
+      return getToken();
     }else{
       colNo = colNo - 1;
 		  token = makeToken(SB_LPAR, lineNo, colNo);
 		  readChar();
+      colNo = colNo + 1;
 		  return token;
     }
 
