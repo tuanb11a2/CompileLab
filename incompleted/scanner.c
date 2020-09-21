@@ -167,13 +167,14 @@ Token* getToken(void) {
 	if(charCodes[tmp] == CHAR_EQ){
     colNo = colNo - 1;
 		token = makeToken(SB_LE, lineNo, colNo);
+    colNo = colNo + 1;
 		readChar();
 		return token;
 	}else{
     colNo = colNo - 1;
 		token = makeToken(SB_LT, lineNo, colNo);
-		return token;
     colNo = colNo + 1;
+		return token;
 	};
 	
   case CHAR_GT:
@@ -181,28 +182,34 @@ Token* getToken(void) {
 	    if(charCodes[tmp] == CHAR_EQ){
         colNo = colNo - 1;
 		    token = makeToken(SB_GE, lineNo, colNo);
+        colNo = colNo + 1;
 		    readChar();
 		    return token;
 	    }else{
         colNo = colNo - 1;
 		    token = makeToken(SB_GT, lineNo, colNo);
-		    return token;
         colNo = colNo + 1;
+		    return token;
 	    };
-  
+  case CHAR_EQ:
+    token = makeToken(SB_EQ, lineNo, colNo);
+    readChar(); 
+    return token;
+
   case CHAR_EXCLAIMATION:
   	tmp = readChar();
 	    if(charCodes[tmp] == CHAR_EQ){
         colNo = colNo - 1;
 		    token = makeToken(SB_NEQ, lineNo, colNo);
+        colNo = colNo + 1;
 		    readChar();
 		    return token;
 	    }else{
         colNo = colNo - 1;
 		    token = makeToken(TK_NONE, lineNo, colNo);
-        error(ERR_INVALIDSYMBOL, lineNo, colNo); 
+        colNo = colNo + 1; 
+        error(ERR_INVALIDSYMBOL, lineNo, colNo);\
         return token;
-        colNo = colNo + 1;
 	    };
   
   case CHAR_COMMA:
@@ -215,6 +222,7 @@ Token* getToken(void) {
 	  if(charCodes[tmp] == CHAR_RPAR){
       colNo = colNo - 1;
 		  token = makeToken(SB_RPAR, lineNo, colNo);
+      colNo = colNo + 1; 
 		  readChar();
 		  return token;
 	  }else{
@@ -229,13 +237,14 @@ Token* getToken(void) {
     if(charCodes[tmp] == CHAR_EQ){
         colNo = colNo - 1;
 		    token = makeToken(SB_ASSIGN, lineNo, colNo);
+        colNo = colNo + 1;
 		    readChar();
 		    return token;
 	    }else{
         colNo = colNo - 1;
 		    token = makeToken(SB_COLON, lineNo, colNo);
-		    return token;
         colNo = colNo + 1;
+		    return token;
 	    };
 
   case CHAR_SEMICOLON:
@@ -253,8 +262,8 @@ Token* getToken(void) {
     if(charCodes[tmp] == CHAR_PERIOD){
       colNo = colNo - 1;
 		  token = makeToken(SB_LSEL, lineNo, colNo);
-		  readChar();
       colNo = colNo + 1;
+		  readChar();
 		  return token;
     }else if(charCodes[tmp] == CHAR_TIMES){
       skipComment();
@@ -262,7 +271,6 @@ Token* getToken(void) {
     }else{
       colNo = colNo - 1;
 		  token = makeToken(SB_LPAR, lineNo, colNo);
-		  readChar();
       colNo = colNo + 1;
 		  return token;
     }
