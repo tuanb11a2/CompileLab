@@ -110,17 +110,22 @@ Token* readConstChar(void) {
   readChar();
   if(currentChar == EOF){
     error(ERR_INVALIDCHARCONSTANT,token->lineNo,token->colNo);
+    return makeToken(TK_NONE,token->lineNo,token->colNo);
   }else{
     token->string[0] = currentChar;
     while(1){
       readChar();
       if(charCodes[currentChar] == CHAR_SINGLEQUOTE){
-        token->string[num] == '\0';
+        token->string[num] = '\0';
+        readChar();
         return token;
       }else if(currentChar == EOF){
         error(ERR_INVALIDCHARCONSTANT,token->lineNo,token->colNo);
+        return makeToken(TK_NONE,token->lineNo,token->colNo);
+      }else{
+        token->string[num] = currentChar;
+        num++;
       }
-      num++;
     }
   }
 
@@ -132,36 +137,36 @@ Token* getToken(void) {
   Token *token;
   int ln, cn, tmp;
 
-  if (currentChar == EOF) 
+  if (currentChar == EOF)
     return makeToken(TK_EOF, lineNo, colNo);
 
   switch (charCodes[currentChar]) {
   case CHAR_SPACE: skipBlank(); return getToken();
-  
+
   case CHAR_LETTER: return readIdentKeyword();
-  
+
   case CHAR_DIGIT: return readNumber();
-  
-  case CHAR_PLUS: 
+
+  case CHAR_PLUS:
     token = makeToken(SB_PLUS, lineNo, colNo);
-    readChar(); 
+    readChar();
     return token;
-    
+
   case CHAR_MINUS:
   	token = makeToken(SB_MINUS, lineNo, colNo);
-    readChar(); 
+    readChar();
     return token;
-    
+
   case CHAR_TIMES:
   	token = makeToken(SB_TIMES, lineNo, colNo);
-    readChar(); 
+    readChar();
     return token;
-    
+
   case CHAR_SLASH:
   	token = makeToken(SB_SLASH, lineNo, colNo);
-    readChar(); 
+    readChar();
     return token;
-    
+
   case CHAR_LT:
   	tmp = readChar();
 	if(charCodes[tmp] == CHAR_EQ){
@@ -176,7 +181,7 @@ Token* getToken(void) {
     colNo = colNo + 1;
 		return token;
 	};
-	
+
   case CHAR_GT:
   	tmp = readChar();
 	    if(charCodes[tmp] == CHAR_EQ){
@@ -193,7 +198,7 @@ Token* getToken(void) {
 	    };
   case CHAR_EQ:
     token = makeToken(SB_EQ, lineNo, colNo);
-    readChar(); 
+    readChar();
     return token;
 
   case CHAR_EXCLAIMATION:
@@ -207,14 +212,14 @@ Token* getToken(void) {
 	    }else{
         colNo = colNo - 1;
 		    token = makeToken(TK_NONE, lineNo, colNo);
-        colNo = colNo + 1; 
+        colNo = colNo + 1;
         error(ERR_INVALIDSYMBOL, lineNo, colNo);\
         return token;
 	    };
-  
+
   case CHAR_COMMA:
     token = makeToken(SB_COMMA, lineNo, colNo);
-    readChar(); 
+    readChar();
     return token;
 
   case CHAR_PERIOD:
@@ -222,7 +227,7 @@ Token* getToken(void) {
 	  if(charCodes[tmp] == CHAR_RPAR){
       colNo = colNo - 1;
 		  token = makeToken(SB_RPAR, lineNo, colNo);
-      colNo = colNo + 1; 
+      colNo = colNo + 1;
 		  readChar();
 		  return token;
 	  }else{
@@ -249,9 +254,9 @@ Token* getToken(void) {
 
   case CHAR_SEMICOLON:
     token = makeToken(SB_SEMICOLON, lineNo, colNo);
-    readChar(); 
+    readChar();
     return token;
-  
+
   case CHAR_SINGLEQUOTE:
     return readConstChar();
 
@@ -277,13 +282,13 @@ Token* getToken(void) {
 
   case CHAR_RPAR:
     token = makeToken(SB_RPAR, lineNo, colNo);
-    readChar(); 
+    readChar();
     return token;
-  
+
   default:
     token = makeToken(TK_NONE, lineNo, colNo);
     error(ERR_INVALIDSYMBOL, lineNo, colNo);
-    readChar(); 
+    readChar();
     return token;
   }
 }
@@ -375,7 +380,7 @@ int main(int argc, char *argv[]) {
     printf("Can\'t read input file!\n");
     return -1;
   }
-    
+
   return 0;
 }
 
