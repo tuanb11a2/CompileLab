@@ -60,7 +60,7 @@ Token* readIdentKeyword(void) {
 
   token->string[count] = '\0';
 
-  //Error or not
+  //Check error
   if(count > MAX_IDENT_LEN){
     error(ERR_IDENTTOOLONG,token->lineNo,token->colNo);
   }else{
@@ -82,20 +82,12 @@ Token* readNumber(void) {
 	  if (count > MAX_IDENT_LEN) {
 		  error(ERR_IDENTTOOLONG, token->lineNo, token->colNo);
 	  }
-    // Add current character to the number
     token->string[count] = currentChar;
-
-    // Increase string index
     count++;
-
-    // Read next character
     readChar();
   }
 
-  // End string
   token->string[count] = '\0';
-
-  // Convert current number to string
   token->value = atoi(token->string);
 
   return token;
@@ -168,32 +160,24 @@ Token* getToken(void) {
     return token;
 
   case CHAR_LT:
+    token = makeToken(SB_LE, lineNo, colNo);
   	tmp = readChar();
-	if(charCodes[tmp] == CHAR_EQ){
-    colNo = colNo - 1;
-		token = makeToken(SB_LE, lineNo, colNo);
-    colNo = colNo + 1;
-		readChar();
-		return token;
-	}else{
-    colNo = colNo - 1;
-		token = makeToken(SB_LT, lineNo, colNo);
-    colNo = colNo + 1;
-		return token;
-	};
+	  if(charCodes[tmp] == CHAR_EQ){
+		  readChar();
+		  return token;
+	  }else{
+		  token = makeToken(SB_LT, token->lineNo, token->colNo);
+		  return token;
+	  };
 
   case CHAR_GT:
+    token = makeToken(SB_GE, lineNo, colNo);
   	tmp = readChar();
 	    if(charCodes[tmp] == CHAR_EQ){
-        colNo = colNo - 1;
-		    token = makeToken(SB_GE, lineNo, colNo);
-        colNo = colNo + 1;
 		    readChar();
 		    return token;
 	    }else{
-        colNo = colNo - 1;
-		    token = makeToken(SB_GT, lineNo, colNo);
-        colNo = colNo + 1;
+		    token = makeToken(SB_GT, token->lineNo, token->colNo);
 		    return token;
 	    };
   case CHAR_EQ:
@@ -202,18 +186,14 @@ Token* getToken(void) {
     return token;
 
   case CHAR_EXCLAIMATION:
+    token = makeToken(SB_NEQ, lineNo, colNo);
   	tmp = readChar();
 	    if(charCodes[tmp] == CHAR_EQ){
-        colNo = colNo - 1;
-		    token = makeToken(SB_NEQ, lineNo, colNo);
-        colNo = colNo + 1;
 		    readChar();
 		    return token;
 	    }else{
-        colNo = colNo - 1;
-		    token = makeToken(TK_NONE, lineNo, colNo);
-        colNo = colNo + 1;
-        error(ERR_INVALIDSYMBOL, lineNo, colNo);\
+		    token = makeToken(TK_NONE, token->lineNo, token->colNo);
+        error(ERR_INVALIDSYMBOL, token->lineNo, token->colNo);
         return token;
 	    };
 
@@ -223,32 +203,24 @@ Token* getToken(void) {
     return token;
 
   case CHAR_PERIOD:
+    token = makeToken(SB_RPAR, lineNo, colNo);
     tmp = readChar();
 	  if(charCodes[tmp] == CHAR_RPAR){
-      colNo = colNo - 1;
-		  token = makeToken(SB_RPAR, lineNo, colNo);
-      colNo = colNo + 1;
 		  readChar();
 		  return token;
 	  }else{
-      colNo = colNo - 1;
-		  token = makeToken(SB_PERIOD, lineNo, colNo);
+		  token = makeToken(SB_PERIOD, token->lineNo, token->colNo);
 		  return token;
-      colNo = colNo + 1;
 	  };
 
   case CHAR_COLON:
+    token = makeToken(SB_ASSIGN, lineNo, colNo);
     tmp = readChar();
     if(charCodes[tmp] == CHAR_EQ){
-        colNo = colNo - 1;
-		    token = makeToken(SB_ASSIGN, lineNo, colNo);
-        colNo = colNo + 1;
 		    readChar();
 		    return token;
 	    }else{
-        colNo = colNo - 1;
-		    token = makeToken(SB_COLON, lineNo, colNo);
-        colNo = colNo + 1;
+		    token = makeToken(SB_COLON, token->lineNo, token->colNo);
 		    return token;
 	    };
 
@@ -260,23 +232,17 @@ Token* getToken(void) {
   case CHAR_SINGLEQUOTE:
     return readConstChar();
 
-
-  //Not done
   case CHAR_LPAR:
+    token = makeToken(SB_LSEL, lineNo, colNo);
     tmp = readChar();
     if(charCodes[tmp] == CHAR_PERIOD){
-      colNo = colNo - 1;
-		  token = makeToken(SB_LSEL, lineNo, colNo);
-      colNo = colNo + 1;
 		  readChar();
 		  return token;
     }else if(charCodes[tmp] == CHAR_TIMES){
       skipComment();
       return getToken();
     }else{
-      colNo = colNo - 1;
-		  token = makeToken(SB_LPAR, lineNo, colNo);
-      colNo = colNo + 1;
+		  token = makeToken(SB_LPAR, token->lineNo, token->colNo);
 		  return token;
     }
 
