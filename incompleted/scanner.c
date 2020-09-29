@@ -67,8 +67,6 @@ Token* readIdentKeyword(void) {
 
   token->string[count] = '\0';
 
-  //Check error
-
   TokenType type = checkKeyword(token->string);
   if(type != TK_NONE){
     token->tokenType = type;
