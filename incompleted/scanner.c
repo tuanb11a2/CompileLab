@@ -40,10 +40,10 @@ void skipComment() {
         break;
       }else if (tmp == EOF)
       {
-        return error(ERR_ENDOFCOMMENT,lineNo,colNo);
+        error(ERR_ENDOFCOMMENT,lineNo,colNo);
       }
     }else if(tmp == EOF){
-      return error(ERR_ENDOFCOMMENT,lineNo,colNo);
+      error(ERR_ENDOFCOMMENT,lineNo,colNo);
     }
   }
 }
@@ -53,21 +53,25 @@ Token* readIdentKeyword(void) {
   Token* token = makeToken(TK_IDENT,lineNo,colNo);
   int count = 0;
   while(charCodes[currentChar] == CHAR_DIGIT || charCodes[currentChar] == CHAR_LETTER){
-    token->string[count] = currentChar;
-    readChar();
-    count++;
+    if(count <= MAX_IDENT_LEN){
+        token->string[count] = currentChar;
+        readChar();
+        count++;
+    }else{
+        error(ERR_IDENTTOOLONG,token->lineNo,token->colNo);
+        break;
+    }
+
+
   }
 
   token->string[count] = '\0';
 
   //Check error
-  if(count > MAX_IDENT_LEN){
-    error(ERR_IDENTTOOLONG,token->lineNo,token->colNo);
-  }else{
-    TokenType type = checkKeyword(token->string);
-    if(type != TK_NONE){
-      token->tokenType = type;
-    }
+
+  TokenType type = checkKeyword(token->string);
+  if(type != TK_NONE){
+    token->tokenType = type;
   }
 
   return token;
@@ -102,7 +106,6 @@ Token* readConstChar(void) {
   readChar();
   if(currentChar == EOF){
     error(ERR_INVALIDCHARCONSTANT,token->lineNo,token->colNo);
-    return makeToken(TK_NONE,token->lineNo,token->colNo);
   }else{
     token->string[0] = currentChar;
     while(1){
@@ -113,7 +116,6 @@ Token* readConstChar(void) {
         return token;
       }else if(currentChar == EOF){
         error(ERR_INVALIDCHARCONSTANT,token->lineNo,token->colNo);
-        return makeToken(TK_NONE,token->lineNo,token->colNo);
       }else{
         token->string[num] = currentChar;
         num++;
@@ -192,9 +194,7 @@ Token* getToken(void) {
 		    readChar();
 		    return token;
 	    }else{
-		    token = makeToken(TK_NONE, token->lineNo, token->colNo);
         error(ERR_INVALIDSYMBOL, token->lineNo, token->colNo);
-        return token;
 	    };
 
   case CHAR_COMMA:

@@ -1,0 +1,34 @@
+# depslib dependency file v1.0
+1601358012 source:c:\users\hust\desktop\compilelab\incompleted\charcode.c
+	"charcode.h"
+
+1601358012 c:\users\hust\desktop\compilelab\incompleted\charcode.h
+
+1601358012 source:c:\users\hust\desktop\compilelab\incompleted\error.c
+	<stdio.h>
+	<stdlib.h>
+	"error.h"
+
+1601358012 c:\users\hust\desktop\compilelab\incompleted\error.h
+
+1601358012 source:c:\users\hust\desktop\compilelab\incompleted\reader.c
+	<stdio.h>
+	"reader.h"
+
+1601358012 c:\users\hust\desktop\compilelab\incompleted\reader.h
+
+1601358012 source:c:\users\hust\desktop\compilelab\incompleted\scanner.c
+	<stdio.h>
+	<stdlib.h>
+	"reader.h"
+	"charcode.h"
+	"token.h"
+	"error.h"
+
+1601358012 c:\users\hust\desktop\compilelab\incompleted\token.h
+
+1601358012 source:c:\users\hust\desktop\compilelab\incompleted\token.c
+	<stdlib.h>
+	<ctype.h>
+	"token.h"
+
