@@ -6,7 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <limits.h>
 #include "reader.h"
 #include "charcode.h"
 #include "token.h"
@@ -90,7 +90,15 @@ Token* readNumber(void) {
   }
 
   token->string[count] = '\0';
-  token->value = atoi(token->string);
+  //Number overflow check
+  //Overflow occurs then number that convert string will change to negative
+  if(atoi(token->string) < 0){
+    printf("%d-%d:Number is too large!\n",token->lineNo,token->colNo);
+    exit(-1);
+  }else{
+    token->value = atoi(token->string);
+  }
+  
 
   return token;
 }
