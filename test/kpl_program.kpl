@@ -1,0 +1,90 @@
+PROGRAM  MAXNUMBER;  (* KPL Program for find the maximum value *)
+CONST MAX = 50;
+TYPE T = INTEGER;
+VAR  A : ARRAY(. 50 .) OF T;
+     N : INTEGER;
+
+PROCEDURE INPUT;
+VAR I : INTEGER;
+BEGIN
+  FOR I := 1 TO N DO
+     A(.I.) := READI;
+END;
+
+
+PROCEDURE OUTPUT;
+VAR I : INTEGER;
+BEGIN
+  FOR I := 1 TO N DO
+     BEGIN
+       CALL WRITEI(A(.I.));
+       CALL WRITELN;
+     END
+END;
+
+FUNCTION MAXINDEX : INTEGER;
+VAR I: INTEGER;
+    M : INTEGER;
+BEGIN
+    I := 1;
+    M := A(.I.);
+    FOR I := 2 TO N DO
+	BEGIN
+	    IF  A(.I.) > M  THEN
+    	        BEGIN
+      		    M:=A(.I.);
+    		END
+	END
+    CALL  WRITEC('M');
+    CALL  WRITEC('a');
+    CALL  WRITEC('x');
+    CALL  WRITEC(' ');
+    CALL  WRITEC('i');
+    CALL  WRITEC('n');
+    CALL  WRITEC('d');
+    CALL  WRITEC('e');
+    CALL  WRITEC('x');
+    CALL  WRITEC(':');
+
+    FOR I := 1 TO N DO
+	BEGIN
+	    IF  A(.I.) = M  THEN
+    		BEGIN
+      		    CALL WRITEI(I);
+		    CALL WRITELN;
+    		END
+	END
+END;
+
+BEGIN
+	CALL  WRITEC('R');
+	CALL  WRITEC('e');
+	CALL  WRITEC('a');
+	CALL  WRITEC('d');
+	CALL  WRITEC(' ');
+	CALL  WRITEC('n');
+	CALL  WRITEC('u');
+	CALL  WRITEC('m');
+	CALL  WRITEC('b');
+	CALL  WRITEC('e');
+	CALL  WRITEC('r');
+	CALL  WRITEC(' ');
+	CALL  WRITEC('o');
+	CALL  WRITEC('f');
+	CALL  WRITEC(' ');
+	CALL  WRITEC('e');
+	CALL  WRITEC('l');
+	CALL  WRITEC('e');
+	CALL  WRITEC('m');
+	CALL  WRITEC('e');
+	CALL  WRITEC('n');
+	CALL  WRITEC('t');
+	CALL  WRITEC('s');
+	CALL  WRITEC(':');
+	N := READI;
+	CALL  WRITELN;
+	CALL INPUT;
+	CALL OUTPUT;
+	CALL WRITEI(MAXINDEX);
+
+END.

@@ -98,7 +98,7 @@ Token* readNumber(void) {
   }else{
     token->value = atoi(token->string);
   }
-  
+
 
   return token;
 }
@@ -209,7 +209,7 @@ Token* getToken(void) {
     return token;
 
   case CHAR_PERIOD:
-    token = makeToken(SB_RPAR, lineNo, colNo);
+    token = makeToken(SB_RSEL, lineNo, colNo);
     tmp = readChar();
 	  if(charCodes[tmp] == CHAR_RPAR){
 		  readChar();
