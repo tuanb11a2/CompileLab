@@ -28,6 +28,20 @@ VAR I: INTEGER;
 BEGIN
     I := 1;
     M := A(.I.);
+
+    CALL  WRITEC('M');
+    CALL  WRITEC('a');
+    CALL  WRITEC('x');
+    CALL  WRITEC(' ');
+    CALL  WRITEC('n');
+    CALL  WRITEC('u');
+    CALL  WRITEC('m');
+    CALL  WRITEC('b');
+    CALL  WRITEC('e');
+    CALL  WRITEC('r');
+    CALL  WRITEC(':');
+
+
     FOR I := 2 TO N DO
 	BEGIN
 	    IF  A(.I.) > M  THEN
@@ -35,6 +49,10 @@ BEGIN
       		    M:=A(.I.);
     		END
 	END
+	CALL WRITEI(M);
+	CALL WRITELN;
+
+
     CALL  WRITEC('M');
     CALL  WRITEC('a');
     CALL  WRITEC('x');
@@ -51,7 +69,7 @@ BEGIN
 	    IF  A(.I.) = M  THEN
     		BEGIN
       		    CALL WRITEI(I);
-		    CALL WRITELN;
+		    	CALL WRITELN;
     		END
 	END
 END;
@@ -82,7 +100,7 @@ BEGIN
 	CALL  WRITEC('s');
 	CALL  WRITEC(':');
 	N := READI;
-	CALL  WRITELN;
+	CALL WRITELN;
 	CALL INPUT;
 	CALL OUTPUT;
 	CALL WRITEI(MAXINDEX);
