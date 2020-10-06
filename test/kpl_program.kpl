@@ -12,35 +12,12 @@ BEGIN
 END;
 
 
-PROCEDURE OUTPUT;
-VAR I : INTEGER;
-BEGIN
-  FOR I := 1 TO N DO
-     BEGIN
-       CALL WRITEI(A(.I.));
-       CALL WRITELN;
-     END
-END;
-
 FUNCTION MAXINDEX : INTEGER;
 VAR I: INTEGER;
     M : INTEGER;
 BEGIN
     I := 1;
     M := A(.I.);
-
-    CALL  WRITEC('M');
-    CALL  WRITEC('a');
-    CALL  WRITEC('x');
-    CALL  WRITEC(' ');
-    CALL  WRITEC('n');
-    CALL  WRITEC('u');
-    CALL  WRITEC('m');
-    CALL  WRITEC('b');
-    CALL  WRITEC('e');
-    CALL  WRITEC('r');
-    CALL  WRITEC(':');
-
 
     FOR I := 2 TO N DO
 	BEGIN
@@ -49,9 +26,6 @@ BEGIN
       		    M:=A(.I.);
     		END
 	END
-	CALL WRITEI(M);
-	CALL WRITELN;
-
 
     CALL  WRITEC('M');
     CALL  WRITEC('a');
@@ -69,16 +43,17 @@ BEGIN
 	    IF  A(.I.) = M  THEN
     		BEGIN
       		    CALL WRITEI(I);
-		    	CALL WRITELN;
+		    CALL WRITELN;
     		END
 	END
 END;
 
 BEGIN
-	CALL  WRITEC('R');
+	CALL  WRITEC('E');
+	CALL  WRITEC('n');
+	CALL  WRITEC('t');
 	CALL  WRITEC('e');
-	CALL  WRITEC('a');
-	CALL  WRITEC('d');
+	CALL  WRITEC('r');
 	CALL  WRITEC(' ');
 	CALL  WRITEC('n');
 	CALL  WRITEC('u');
@@ -101,8 +76,24 @@ BEGIN
 	CALL  WRITEC(':');
 	N := READI;
 	CALL WRITELN;
+
+	CALL  WRITEC('I');
+	CALL  WRITEC('n');
+	CALL  WRITEC('p');
+	CALL  WRITEC('u');
+	CALL  WRITEC('t');
+	CALL  WRITEC(' ');
+	CALL  WRITEC('n');
+	CALL  WRITEC('u');
+	CALL  WRITEC('m');
+	CALL  WRITEC('b');
+	CALL  WRITEC('e');
+	CALL  WRITEC('r');
+	CALL  WRITEC('s');
+	CALL  WRITEC(':');
 	CALL INPUT;
-	CALL OUTPUT;
+	CALL WRITELN;
+
 	CALL WRITEI(MAXINDEX);
 
 END.
