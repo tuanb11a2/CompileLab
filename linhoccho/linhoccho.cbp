@@ -17,7 +17,7 @@
 					<Add option="-g" />
 				</Compiler>
 				<ExtraCommands>
-					<Add after="scanner C:\Users\HUST\Desktop\CompileLab\test\example2.kpl" />
+					<Add after="scanner C:\Users\HUST\Desktop\CompileLab\test\kpl_program.kpl" />
 				</ExtraCommands>
 				<MakeCommands>
 					<Build command="$make -f $makefile" />
