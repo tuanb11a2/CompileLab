@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Parser" />
+		<Option makefile_is_custom="1" />
+		<Option execution_dir="incompleted" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<MakeCommands>
+			<Build command="$make -f $makefile" />
+			<CompileFile command="$make -f $makefile $file" />
+			<Clean command="$make -f $makefile clean$target" />
+			<DistClean command="$make -f $makefile distclean$target" />
+			<AskRebuildNeeded command="$make -q -f $makefile $target" />
+			<SilentBuild command="$make -f $makefile &gt; $(CMD_NULL)" />
+		</MakeCommands>
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/Parser" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<ExtraCommands>
+					<Add before="parser ../test/example1.kpl" />
+				</ExtraCommands>
+				<MakeCommands>
+					<Build command="$make -f $makefile" />
+					<CompileFile command="$make -f $makefile $file" />
+					<Clean command="$make -f $makefile clean$target" />
+					<DistClean command="$make -f $makefile distclean$target" />
+					<AskRebuildNeeded command="$make -q -f $makefile $target" />
+					<SilentBuild command="$make -f $makefile &gt; $(CMD_NULL)" />
+				</MakeCommands>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/Parser" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="incompleted/Makefile" />
+		<Unit filename="incompleted/charcode.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="incompleted/charcode.h" />
+		<Unit filename="incompleted/error.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="incompleted/error.h" />
+		<Unit filename="incompleted/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="incompleted/parser.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="incompleted/parser.h" />
+		<Unit filename="incompleted/reader.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="incompleted/reader.h" />
+		<Unit filename="incompleted/scanner.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="incompleted/scanner.h" />
+		<Unit filename="incompleted/test.rar" />
+		<Unit filename="incompleted/token.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="incompleted/token.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
