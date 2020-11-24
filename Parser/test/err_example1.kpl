@@ -1,4 +1,4 @@
-Program Example2; (* Factorial *)
+Program Example1; (* Factorial *)
    
 Const a = :;
 
@@ -17,3 +17,5 @@ Begin
       Call WriteI( F(i));
     End;
 End. (* Factorial *)
+
+(* Error come from block 2 when meet KW_CONST -> constdecl -> constant  *)

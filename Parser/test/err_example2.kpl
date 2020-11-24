@@ -14,3 +14,6 @@ Begin
       Call WriteI( F(i));
     End;
 End. (* Factorial *)
+
+(* Error come from forSt when meet KW_FOR -> expression -> 
+expression 2-> term -> factor when meet TK_NUMBER -> back tor term 2  *)

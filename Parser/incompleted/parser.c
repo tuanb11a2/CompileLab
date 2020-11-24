@@ -414,33 +414,8 @@ void compileArguments(void) {
   switch (lookAhead->tokenType) {
   case SB_LPAR:
     eat(SB_LPAR);
-    compileArguments1();
-    eat(SB_RPAR);
-    break;
-  // Error occurs
-  default:
-    error(ERR_INVALIDARGUMENTS, lookAhead->lineNo, lookAhead->colNo);
-    break;
-  }
-
-}
-
-void compileArguments1(void){
-  switch (lookAhead->tokenType) {
-  case SB_PLUS:
-  case SB_MINUS:
-  //start with factor
-  case TK_NUMBER:
-  case TK_CHAR:
-  case TK_IDENT:
-  case SB_LPAR:
     compileExpression();
     compileArguments2();
-<<<<<<< HEAD
-    break;
-  //Follow Arguments
-  case SB_RPAR:
-=======
     eat(SB_RPAR);
     break;
   //Follow CallSt
@@ -471,7 +446,6 @@ void compileArguments1(void){
   case SB_RSEL:
   //Follow IfSt
   case KW_THEN:
->>>>>>> 4a9b8f8ae5ff8869bb9ee91968c31f072516cd7e
     break;
   // Error occurs
   default:
