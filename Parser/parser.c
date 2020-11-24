@@ -436,49 +436,15 @@ void compileArguments1(void){
   case SB_LPAR:
     compileExpression();
     compileArguments2();
-<<<<<<< HEAD
     break;
   //Follow Arguments
   case SB_RPAR:
-=======
-    eat(SB_RPAR);
-    break;
-  //Follow CallSt
-  case SB_SEMICOLON:
-  case KW_END:
-  case KW_ELSE:
-  //Follow term 2
-  case SB_TIMES:
-  case SB_SLASH:
-  //Follow ForSt
-  case KW_TO:
-  case KW_DO:
-  //Follow Expression 3
-  case SB_PLUS:
-  case SB_MINUS:
-  //Follow Arguments2
-  case SB_COMMA:
-  //Follow factor
-  case SB_RPAR:
-  //Follow Condition2
-  case SB_EQ:
-  case SB_NEQ:
-  case SB_LE:
-  case SB_LT:
-  case SB_GE:
-  case SB_GT:
-  //Follow indexes
-  case SB_RSEL:
-  //Follow IfSt
-  case KW_THEN:
->>>>>>> 4a9b8f8ae5ff8869bb9ee91968c31f072516cd7e
     break;
   // Error occurs
   default:
     error(ERR_INVALIDARGUMENTS, lookAhead->lineNo, lookAhead->colNo);
     break;
   }
-
 }
 
 void compileArguments2(void) {
