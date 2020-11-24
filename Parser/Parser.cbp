@@ -25,7 +25,7 @@
 					<Add option="-g" />
 				</Compiler>
 				<ExtraCommands>
-					<Add before="parser ../test/example1.kpl" />
+					<Add after="parser ../test/example4.kpl" />
 				</ExtraCommands>
 				<MakeCommands>
 					<Build command="$make -f $makefile" />

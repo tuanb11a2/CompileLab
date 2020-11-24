@@ -82,8 +82,8 @@ void compileBlock5(void) {
 }
 
 void compileConstDecls(void) {
-while (lookAhead->tokenType==TK_IDENT)
-compileConstDecl();
+  while (lookAhead->tokenType==TK_IDENT)
+    compileConstDecl();
 }
 
 void compileConstDecl(void) {
@@ -183,12 +183,8 @@ void compileConstant(void) {
     case TK_CHAR:
       eat(TK_CHAR);
       break;
-    case TK_IDENT:
-    case TK_NUMBER:
-      compileConstant2();
-      break;
     default:
-      error(ERR_INVALIDCONSTANT, lookAhead->lineNo, lookAhead->colNo);
+      compileConstant2();
       break;
   }
 }
@@ -247,19 +243,34 @@ void compileBasicType(void) {
 }
 
 void compileParams(void) {
-  while(lookAhead->tokenType == SB_LPAR){
-    eat(SB_LPAR);
-    compileParam();
-    compileParams2();
-    eat(SB_RPAR);
+  switch (lookAhead->tokenType) {
+  case SB_LPAR:
+      eat(SB_LPAR);
+      compileParam();
+      compileParams2();
+      eat(SB_RPAR);
+      break;
+  case SB_COLON:
+  case SB_SEMICOLON:
+      break;
+  default:
+      error(ERR_INVALIDPARAM, lookAhead->lineNo, lookAhead->colNo);
+      break;
   }
 }
 
 void compileParams2(void) {
-  while(lookAhead->tokenType == SB_SEMICOLON){
-    eat(SB_SEMICOLON);
-    compileParam();
-    compileParams2();
+  switch (lookAhead->tokenType) {
+  case SB_SEMICOLON:
+      eat(SB_SEMICOLON);
+      compileParam();
+      compileParams2();
+      break;
+  case SB_RPAR:
+      break;
+  default:
+      error(ERR_INVALIDPARAM, lookAhead->lineNo, lookAhead->colNo);
+      break;
   }
 }
 
@@ -288,9 +299,17 @@ void compileStatements(void) {
 }
 
 void compileStatements2(void) {
-  while(lookAhead->tokenType == SB_SEMICOLON){
-    eat(SB_SEMICOLON);
-    compileStatement();
+  switch(lookAhead->tokenType){
+    case SB_SEMICOLON:
+      eat(SB_SEMICOLON);
+      compileStatement();
+      compileStatements2();
+      break;
+    case KW_END:
+      break;
+    default:
+      error(ERR_INVALIDSTATEMENT, lookAhead->lineNo, lookAhead->colNo);
+      break;
   }
 }
 
@@ -365,10 +384,8 @@ void compileIfSt(void) {
 }
 
 void compileElseSt(void) {
-  if(lookAhead->tokenType == KW_ELSE){
-    eat(KW_ELSE);
-    compileStatement();
-  }
+  eat(KW_ELSE);
+  compileStatement();
 }
 
 void compileWhileSt(void) {
@@ -394,29 +411,62 @@ void compileForSt(void) {
 }
 
 void compileArguments(void) {
-  if(lookAhead->tokenType == SB_LPAR){
+  switch (lookAhead->tokenType) {
+  case SB_LPAR:
     eat(SB_LPAR);
+    compileArguments1();
+    eat(SB_RPAR);
+    break;
+  // Error occurs
+  default:
+    error(ERR_INVALIDARGUMENTS, lookAhead->lineNo, lookAhead->colNo);
+    break;
+  }
+
+}
+
+void compileArguments1(void){
+  switch (lookAhead->tokenType) {
+  case SB_PLUS:
+  case SB_MINUS:
+  //start with factor
+  case TK_NUMBER:
+  case TK_CHAR:
+  case TK_IDENT:
+  case SB_LPAR:
     compileExpression();
     compileArguments2();
-    eat(SB_RPAR);
+    break;
+  //Follow Arguments
+  case SB_RPAR:
+    break;
+  // Error occurs
+  default:
+    error(ERR_INVALIDARGUMENTS, lookAhead->lineNo, lookAhead->colNo);
+    break;
   }
 }
 
 void compileArguments2(void) {
-  if(lookAhead->tokenType == SB_COMMA){
+  switch (lookAhead->tokenType) {
+  case SB_COMMA:
     eat(SB_COMMA);
     compileExpression();
     compileArguments2();
+    break;
+  //Follow arguments
+  case SB_RPAR:
+    break;
+  //Error
+  default:
+    error(ERR_INVALIDARGUMENTS, lookAhead->lineNo, lookAhead->colNo);
+    break;
   }
 }
 
 void compileCondition(void) {
-  if(lookAhead->tokenType == SB_PLUS|| lookAhead->tokenType == SB_MINUS || lookAhead->tokenType == TK_NUMBER ||lookAhead->tokenType == TK_CHAR ||lookAhead->tokenType == TK_IDENT ||lookAhead->tokenType == SB_LPAR){
     compileExpression();
     compileCondition2();
-  }else{
-    error(ERR_INVALIDCOMPARATOR,lookAhead->lineNo,lookAhead->colNo);
-  }
 }
 
 void compileCondition2(void) {
@@ -496,42 +546,83 @@ void compileExpression3(void) {
     compileTerm();
     compileExpression3();
     break;
-  // Epsilon case
+  // Follow (statement)
+  case SB_SEMICOLON:
+  case KW_END:
+  case KW_ELSE:
+  //Follow Condition2
+  case SB_EQ:
+  case SB_NEQ:
+  case SB_LE:
+  case SB_LT:
+  case SB_GE:
+  case SB_GT:
+  //Follow ForSt
+  case KW_TO:
+  case KW_DO:
+  //Follow Arguments
+  case SB_COMMA:
+  //Follow Factor
+  case SB_RPAR:
+  //Follow indexes
+  case SB_RSEL:
+  //Follow IfSt
+  case KW_THEN:
+    break;
+  //Error case
   default:
+    error(ERR_INVALIDEXPRESSION, lookAhead->lineNo, lookAhead->colNo);
     break;
   }
 }
 
 void compileTerm(void) {
-  switch(lookAhead->tokenType){
-    case TK_NUMBER:
-    case TK_CHAR:
-    case TK_IDENT:
-    case SB_LPAR:
-        compileFactor();
-        compileTerm2();
-    default:
-        error(ERR_INVALIDTERM,lookAhead->lineNo,lookAhead->colNo);
-        break;
-  }
+  compileFactor();
+  compileTerm2();
 }
 
 void compileTerm2(void) {
-  while(lookAhead->tokenType == SB_TIMES || lookAhead->tokenType == SB_SLASH){
-  	switch (lookAhead->tokenType) {
-  		case SB_TIMES:
-    		eat(SB_TIMES);
-    		compileFactor();
-    		compileExpression3();
-    		break;
-  		case SB_MINUS:
-  			eat(SB_MINUS);
-    		compileTerm();
-    		compileExpression3();
-    		break;
-  		default:
-    		break;
-  	}
+  switch (lookAhead->tokenType) {
+  case SB_TIMES:
+    eat(SB_TIMES);
+    compileFactor();
+    compileTerm2();
+    break;
+  case SB_SLASH:
+  	eat(SB_SLASH);
+    compileFactor();
+    compileTerm2();
+    break;
+  //Follow Expression3
+  case SB_PLUS:
+  case SB_MINUS:
+  // Follow (statement)
+  case SB_SEMICOLON:
+  case KW_END:
+  case KW_ELSE:
+  //Follow Condition2
+  case SB_EQ:
+  case SB_NEQ:
+  case SB_LE:
+  case SB_LT:
+  case SB_GE:
+  case SB_GT:
+  //Follow ForSt
+  case KW_TO:
+  case KW_DO:
+  //Follow Arguments
+  case SB_COMMA:
+  //Follow Factor
+  case SB_RPAR:
+  //Follow indexes
+  case SB_RSEL:
+  //Follow IfSt
+  case KW_THEN:
+    break;
+  //Error case
+  default:
+    error(ERR_INVALIDTERM, lookAhead->lineNo, lookAhead->colNo);
+    break;
   }
 }
 
@@ -552,14 +643,13 @@ void compileFactor(void) {
     			case SB_LPAR:
     				compileArguments();
     				break;
-    			// Epsilon case
     			default:
     				break;
 			}
     		break;
   		// Error occurs if the symbol not valid any case
   		default:
-    		error(ERR_INVALIDCOMPARATOR, lookAhead->lineNo, lookAhead->colNo);
+    		error(ERR_INVALIDFACTOR, lookAhead->lineNo, lookAhead->colNo);
     		break;
   	}
 }
