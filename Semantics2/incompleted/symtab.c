@@ -315,6 +315,17 @@ void exitBlock(void) {
 
 Object* lookupObject(char *name) {
   // TODO
+  ObjectNode* tmp;
+  tmp = symtab->currentScope->objList;
+  while(tmp != NULL){
+    if(strcpy(tmp->object->name,name) == 0){
+      return tmp->object;
+    }else{
+      tmp = tmp->next;
+    }
+  }
+
+  return NULL;
 }
 
 void declareObject(Object* obj) {

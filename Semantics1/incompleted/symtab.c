@@ -46,7 +46,7 @@ Type* duplicateType(Type* type) {
   new->typeClass = type->typeClass;
   if(type->typeClass == TP_ARRAY){
     new->arraySize = type->arraySize;
-    new->elementType = type->elementType;
+    new->elementType = duplicateType(type->elementType);
   }
   return new;
 }
@@ -152,7 +152,7 @@ Object* createVariableObject(char *name) {
   // TODO
   Object* variable = (Object*) malloc(sizeof(Object));
   strcpy(variable->name,name);
-  variable->kind = OBJ_TYPE;
+  variable->kind = OBJ_VARIABLE;
   variable->varAttrs = (VariableAttributes*) malloc(sizeof(VariableAttributes));
   //type->typeAttrs->actualType?
   return variable;
@@ -164,7 +164,8 @@ Object* createFunctionObject(char *name) {
   strcpy(function->name,name);
   function->kind = OBJ_FUNCTION;
   function->funcAttrs = (FunctionAttributes*) malloc(sizeof(FunctionAttributes));
-  //function->funcAttrs->paramList?
+  function->funcAttrs->scope = createScope(function,symtab->currentScope);
+  function->funcAttrs->paramList = NULL;
   return function;
 }
 
@@ -174,7 +175,8 @@ Object* createProcedureObject(char *name) {
   strcpy(procedure->name,name);
   procedure->kind = OBJ_PROCEDURE;
   procedure->procAttrs = (ProcedureAttributes*) malloc(sizeof(ProcedureAttributes));
-  //procedure->procAttrs->paramList?
+  procedure->procAttrs->scope = createScope(procedure,symtab->currentScope);
+  procedure->procAttrs->paramList = NULL;
   return procedure;
 }
 
@@ -199,7 +201,6 @@ void freeObject(Object* obj) {
     break;
   
   case OBJ_VARIABLE:
-    freeScope(obj->varAttrs->scope);
     freeType(obj->varAttrs->type);
     free(obj->varAttrs);
     break;
@@ -212,7 +213,7 @@ void freeObject(Object* obj) {
   case OBJ_FUNCTION:
     freeType(obj->funcAttrs->returnType);
     freeScope(obj->funcAttrs->scope);
-    freeObjectList(obj->funcAttrs->paramList);
+    freeReferenceList(obj->funcAttrs->paramList);
     free(obj->funcAttrs);
     break;
   
@@ -279,10 +280,18 @@ void addObject(ObjectNode **objList, Object* obj) {
 
 Object* findObject(ObjectNode *objList, char *name) {
   // TODO
-  while(strcmp(objList->object->name,name) != 0){
-    objList = objList->next;
+  while (objList != NULL)
+  {
+    Object *tmp = objList->object;
+    if (strcmp(tmp->name, name) == 0)
+    {
+      return tmp;
+    }
+    else
+      objList = objList->next;
   }
-  return objList->object;
+
+  return NULL;
 }
 
 /******************* others ******************************/
